@@ -1,0 +1,61 @@
+ @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+ .montserrat {
+   font-family: "Montserrat", sans-serif;
+   font-optical-sizing: auto;
+   font-weight: 400;
+   font-style: normal;
+}
+
+:root {
+    --cor-fundo: #676767;
+    --cor-texto-claro: white;
+    --cor-texto-escuro: black;
+    --cor-detalhes: #7a4ae2;
+    --cor-detalhes-escuro: #572fae;
+    --fonte: 'Montserrat';
+}
+body {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto-claro);
+    font-family: var(--fonte);
+}
+
+.navbar {
+    background-color: var(--cor-detalhes);
+}
+
+.navbar-brand {
+    color: var(--cor-texto-claro) !important;
+    font-weight: bold;
+}
+
+.btn-custom {
+    background-color: var(--cor-detalhes);
+    color: var(--cor-texto-claro);
+    border: none;
+}
+
+.btn-custom:hover {
+    background-color: var(--cor-detalhes-escuro);
+}
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+table th {
+    background-color: #eaf2fb;
+}
+
+.table-hover>tbody>tr:hover>* {
+    --bs-table-color-state: var(--bs-table-hover-color);
+    --bs-table-bg-state: var(--bs-table-hover-bg);
+    transition: all 0.2s ease;
+}
+
+.form-label, .modal-title{
+    color: var(--cor-texto-escuro);
+}
