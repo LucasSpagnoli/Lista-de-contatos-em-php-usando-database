@@ -5,8 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerenciador de Contatos</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- bootstrap -->
   <link rel="stylesheet" href="./estilos/styles.css">
+  <script defer src="js/script.js"></script> <!-- Javascript que conecta back com front end -->
 </head>
 
 <body>
@@ -44,15 +45,17 @@
         </thead>
 
         <tbody id="tabela-contatos">
+
           <tr>
             <td>João Silva</td>
             <td>joao@email.com</td>
             <td>(11) 99999-0000</td>
             <td class="text-center">
-              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">✏️ Editar</button>
-              <button class="btn btn-sm btn-outline-danger">🗑️ Excluir</button>
+              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">✏️</button>
+              <button class="btn btn-sm btn-outline-danger">🗑️</button>
             </td>
           </tr>
+
         </tbody>
       </table>
     </div>
@@ -125,4 +128,5 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

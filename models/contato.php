@@ -1,5 +1,7 @@
-<?php class Contato
-{
+<?php
+// Arquivo que tem a classe Contato, com id, email, telefone, construtor e os getters e setters
+
+class Contato {
     private $id;
     private $nome;
     private $email;
@@ -35,6 +37,7 @@
     }
     public function setEmail($email)
     {
+        // Valida o formato do email
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
             throw new InvalidArgumentException('Email inválido!');
         }
