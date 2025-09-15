@@ -45,17 +45,7 @@
         </thead>
 
         <tbody id="tabela-contatos">
-
-          <tr>
-            <td>João Silva</td>
-            <td>joao@email.com</td>
-            <td>(11) 99999-0000</td>
-            <td class="text-center">
-              <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">✏️</button>
-              <button class="btn btn-sm btn-outline-danger">🗑️</button>
-            </td>
-          </tr>
-
+          <!-- Aqui virão, através do JS e do banco de dados, os contatos -->
         </tbody>
       </table>
     </div>
