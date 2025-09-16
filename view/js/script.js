@@ -1,6 +1,6 @@
 // Pega as variáveis que serão usadas
 let tabela = document.querySelector("#tabela-contatos")
-const addForm = document.querySelector('#addForm')
+let addForm = document.querySelector('#formAdd')
 let url = '../controllers/contatoController.php' // URL do contatoController.php
 
 // Cria função assíncrona que vai receber os dados (em JSON) do contatoController
@@ -18,7 +18,7 @@ async function getData(request) {
 }
 
 // Função que vai carregar os contatos
-(async function carregarContatos() {
+async function carregarContatos() {
     const contatos = await getData(url) // cria uma array de contatos com as informações do banco de dados
 
     tabela.innerHTML = '' // esvazia a lista
@@ -38,10 +38,11 @@ async function getData(request) {
         </tr>
         `
     }
-})()
+}
+carregarContatos()
 
 // Evento de submit no forms, vai salavar os dados em JSON e enviar ao controller pra ser usado no php
-addCttBtn.addEventListener('submit', async (event) =>{
+addForm.addEventListener('submit', async (event) =>{
     event.preventDefault() // previne que a página recarregue
 
     let nomeInput = document.querySelector('#nome')
@@ -57,7 +58,7 @@ addCttBtn.addEventListener('submit', async (event) =>{
     // Vai servir para transformar os dados em JSON e enviar ao controller, para então o PHP pegar esses dados e usá-los
     const postFetch = { 
         method: 'POST', 
-        Headers: {
+        headers: {
             'Content-type': 'application/json'
         },
         body: JSON.stringify(dadosContato)

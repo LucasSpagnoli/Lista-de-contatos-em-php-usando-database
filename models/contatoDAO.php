@@ -31,4 +31,20 @@ class ContatoDAO {
             exit();
         }
     }
+
+    public function create($contato){
+        try {
+             $sql = "INSERT INTO contatos VALUES (NULL, ?, ?, ?)"; // Cria ordem em SQL pro banco de dados, tem ponto de interrogação por motivos de segurança
+             $statement = $this->connection->prepare($sql);
+             $success = $statement->execute([
+                $contato->nome,
+                $contato->email,
+                $contato->telefone
+             ]);
+             return $success;
+        } catch (PDOException $e) {
+            error_log("Erro ao criar contato: " . $e->getMessage());
+            return false;
+        }
+    }
 }
