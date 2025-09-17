@@ -32,9 +32,10 @@ class ContatoDAO {
         }
     }
 
+    // Função que cria novo contato
     public function create($contato){
         try {
-             $sql = "INSERT INTO contatos VALUES (NULL, ?, ?, ?)"; // Cria ordem em SQL pro banco de dados, tem ponto de interrogação por motivos de segurança
+             $sql = "INSERT INTO contatos (id, nome, email, telefone) VALUES (NULL, ?, ?, ?)"; // Cria ordem em SQL pro banco de dados, tem ponto de interrogação por motivos de segurança
              $statement = $this->connection->prepare($sql);
              $success = $statement->execute([
                 $contato->nome,
@@ -44,6 +45,21 @@ class ContatoDAO {
              return $success;
         } catch (PDOException $e) {
             error_log("Erro ao criar contato: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    // Função que deleta contato
+    public function delete($id){
+        try {
+            $sql = "DELETE FROM contatos WHERE id = ?";
+            $statement = $this->connection->prepare(($sql));
+            $success = $statement->execute([
+                $id
+            ]);
+            return $success;
+        } catch (PDOException $e) {
+            error_log(("Erro ao deletar contato: " . $e->getMessage()));
             return false;
         }
     }

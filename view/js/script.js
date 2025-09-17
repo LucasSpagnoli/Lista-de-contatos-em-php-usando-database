@@ -1,6 +1,7 @@
 // Pega as variáveis que serão usadas
 let tabela = document.querySelector("#tabela-contatos")
 let addForm = document.querySelector('#formAdd')
+
 let url = '../controllers/contatoController.php' // URL do contatoController.php
 
 // Cria função assíncrona que vai receber os dados (em JSON) do contatoController
@@ -21,19 +22,21 @@ async function getData(request) {
 async function carregarContatos() {
     const contatos = await getData(url) // cria uma array de contatos com as informações do banco de dados
 
+     contatos.sort((a, b) => a.id - b.id) // Organiza contatos por ordem de id: se a.id - a.id for negativo, vai retornar false e entender que a deve vir antes de b
+
     tabela.innerHTML = '' // esvazia a lista
 
     // for que percorre toda a array de contatos
     for (const contato of contatos) {
         tabela.innerHTML +=
-        `
+            `
         <tr>
             <td>${contato.nome}</td>
             <td>${contato.email}</td>
             <td>${contato.telefone}</td>
             <td class="text-center">
                 <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">✏️</button>
-                <button class="btn btn-sm btn-outline-danger" data-id='${contato.id}'>🗑️</button>
+                <button class="delBtn btn btn-sm btn-outline-danger" data-id='${contato.id}'>🗑️</button>
             </td>
         </tr>
         `
@@ -41,8 +44,8 @@ async function carregarContatos() {
 }
 carregarContatos()
 
-// Evento de submit no forms, vai salavar os dados em JSON e enviar ao controller pra ser usado no php
-addForm.addEventListener('submit', async (event) =>{
+// Evento de submit no forms, vai salavar os dados em JSON e enviar ao controller pra ser usado no php e adicionar novo contato
+addForm.addEventListener('submit', async (event) => {
     event.preventDefault() // previne que a página recarregue
 
     let nomeInput = document.querySelector('#nome')
@@ -54,10 +57,10 @@ addForm.addEventListener('submit', async (event) =>{
         email: emailInput.value,
         telefone: telefoneInput.value
     }
-    
+
     // Vai servir para transformar os dados em JSON e enviar ao controller, para então o PHP pegar esses dados e usá-los
-    const postFetch = { 
-        method: 'POST', 
+    const postFetch = {
+        method: 'POST',
         headers: {
             'Content-type': 'application/json'
         },
@@ -69,7 +72,7 @@ addForm.addEventListener('submit', async (event) =>{
         const response = await fetch(url, postFetch)
 
         // Aqui vamos verificar se tudo ocorreu corretamente
-        if (response.ok){
+        if (response.ok) {
             console.log('Contato adicionado')
 
             // Aqui vai fechar o pop-up de adicionar contatos
@@ -83,7 +86,43 @@ addForm.addEventListener('submit', async (event) =>{
         } else {
             console.log('Erro ao adicionar contato')
         }
-    } catch(error){
+    } catch (error) {
         console.log('Erro na requisição: ', error)
-    } 
+    }
+})
+
+// Evento de deletar contato
+tabela.addEventListener('click', async (e) => {
+    const delBtn = e.target.closest('.delBtn')
+
+    // Verificação pra saber se é o botão de deltar mesmo, se não for, interrompe o resto
+    if (!delBtn){
+        return
+    }
+
+    let contatoId = delBtn.dataset.id
+    let deletar = window.confirm('Tem certeza que deseja continuar?')
+
+    if (deletar) {
+
+        const postFetch = {
+            method: 'DELETE',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({ id: contatoId })
+        }
+
+        try {
+            const response = await fetch(url, postFetch)
+            if (response.ok) {
+                console.log('Contato deletado com sucesso!')
+
+                delBtn.closest('tr').remove() // vai remover a linha, ao invés de precisar carregar os contatos novamente
+            } else {
+                console.log('Erro ao deletar contato')
+            }
+        } catch (error) {
+            console.log("Erro ao deletar contato: ", error)
+            alert('Não possível deletar, erro no servidor.')
+        }
+    }
 })
