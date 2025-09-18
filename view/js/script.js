@@ -33,7 +33,7 @@ async function carregarContatos() {
             <td>${contato.email}</td>
             <td>${contato.telefone}</td>
             <td class="text-center">
-                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">✏️</button>
+                <button class="attBtn btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalEdit">✏️</button>
                 <button class="delBtn btn btn-sm btn-outline-danger" data-id='${contato.id}'>🗑️</button>
             </td>
         </tr>
@@ -46,16 +46,23 @@ carregarContatos()
 addForm.addEventListener('submit', async (event) => {
     event.preventDefault() // previne que a página recarregue
 
-    let nome = (document.querySelector('#nome')).value
-    let email = (document.querySelector('#email')).value
-    let telefone = (document.querySelector('#telefone')).value
+    // declaração das variáveis dos inputs e seus valores (por algum motivo não funciona se o .value estiver junto nos primeiors)
+    const nomeInput = (document.querySelector('#nome'))
+    const emailInput = (document.querySelector('#email'))
+    const telefoneInput = (document.querySelector('#telefone'))
+    let nome = nomeInput.value.trim()
+    let email = emailInput.value.trim()
+    let telefone = telefoneInput.value.trim()
 
     // Validação dos campos de nome e telefone
-    if (/\d/.test(nome)) { // regex pra ver se só tem letras
-        window.alert('Digite um nome válido')
-        return
-    } else if ((telefone.length < 10) || (!/^\d{10,11}$/.test(telefone))) { // regex pra ver se só tem números
-        window.alert('Digite um telefone válido (com dd e somente 10-11 números)')
+    for (let char of nome) {
+        if (!((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z') || char === ' ')) {
+            window.alert('Digite um nome válido (somente letras)')
+            return
+        }
+    }
+    if (isNaN(telefone) || (telefone.length !== 10 && telefone.length !== 11)) {
+        window.alert('Digite um telefone válido (apenas números, com DDD, 10 ou 11 dígitos)')
         return
     }
 
@@ -133,4 +140,9 @@ tabela.addEventListener('click', async (e) => {
             alert('Não possível deletar, erro no servidor.')
         }
     }
+})
+
+tabela.addEventListener('click', async (e) => {
+    const attBtn = e.target.closest('.attBtn')
+    
 })

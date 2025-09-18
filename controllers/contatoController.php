@@ -19,13 +19,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $json = file_get_contents('php://input'); // pega o json do novo contato da página
     $novoContato = json_decode($json); // transforma o json em array
 
+    // Verificação pra ver se está vazio
     if ((empty($novoContato->nome) || (empty($novoContato->email)) || (empty($novoContato->telefone)))) {
         $resposta = ['status' => 'error', 'message' => 'Todos os campos são obrigatórios.']; // mensagem que vai aparecer dependendo do resultado (nesse caso de erro)
-
         http_response_code(400); // faz dar erro
         echo json_encode($resposta); // mostra mensagem (de erro)
         exit(); // para execução
+    }
 
+    // Verificação pra ver se só tem letras no nome
+    if (!preg_match("/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/", $novoContato->nome)) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Nome inválido.']);
+        exit();
+    }
+
+    // Verificação pra ver se só tem números (10-11) no telefone
+    if (!preg_match("/^\d{10,11}$/", $novoContato->telefone)) {
+        http_response_code(400);
+        echo json_encode(['status' => 'error', 'message' => 'Telefone inválido.']);
+        exit();
     }
 
     $contatoCriado = $contatoDAO->create($novoContato);
@@ -38,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         http_response_code(500); // faz dar erro
         echo json_encode($resposta); // mostra mensagem
     }
-
 } else if ($_SERVER['REQUEST_METHOD'] === 'DELETE') { // caso o JS esteja enviando ordem para deletar um contato
 
     $json = file_get_contents('php://input');
