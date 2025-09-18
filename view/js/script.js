@@ -22,8 +22,6 @@ async function getData(request) {
 async function carregarContatos() {
     const contatos = await getData(url) // cria uma array de contatos com as informações do banco de dados
 
-     contatos.sort((a, b) => a.id - b.id) // Organiza contatos por ordem de id: se a.id - a.id for negativo, vai retornar false e entender que a deve vir antes de b
-
     tabela.innerHTML = '' // esvazia a lista
 
     // for que percorre toda a array de contatos
@@ -48,14 +46,24 @@ carregarContatos()
 addForm.addEventListener('submit', async (event) => {
     event.preventDefault() // previne que a página recarregue
 
-    let nomeInput = document.querySelector('#nome')
-    let emailInput = document.querySelector('#email')
-    let telefoneInput = document.querySelector('#telefone')
+    let nome = (document.querySelector('#nome')).value
+    let email = (document.querySelector('#email')).value
+    let telefone = (document.querySelector('#telefone')).value
 
+    // Validação dos campos de nome e telefone
+    if (/\d/.test(nome)) { // regex pra ver se só tem letras
+        window.alert('Digite um nome válido')
+        return
+    } else if ((telefone.length < 10) || (!/^\d{10,11}$/.test(telefone))) { // regex pra ver se só tem números
+        window.alert('Digite um telefone válido (com dd e somente 10-11 números)')
+        return
+    }
+
+    // objeto do novo contato
     const dadosContato = {
-        nome: nomeInput.value,
-        email: emailInput.value,
-        telefone: telefoneInput.value
+        nome: nome,
+        email: email,
+        telefone: telefone
     }
 
     // Vai servir para transformar os dados em JSON e enviar ao controller, para então o PHP pegar esses dados e usá-los
@@ -96,7 +104,7 @@ tabela.addEventListener('click', async (e) => {
     const delBtn = e.target.closest('.delBtn')
 
     // Verificação pra saber se é o botão de deltar mesmo, se não for, interrompe o resto
-    if (!delBtn){
+    if (!delBtn) {
         return
     }
 

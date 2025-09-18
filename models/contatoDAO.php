@@ -19,7 +19,7 @@ class ContatoDAO {
     public function getAll(){
         try {
             
-            $sql = "SELECT * FROM contatos ORDER BY nome ASC"; // Cria ordem em SQL pro banco de dados
+            $sql = "SELECT * FROM contatos ORDER BY id ASC"; // Cria ordem em SQL pro banco de dados
             $statement = $this->connection->prepare($sql); // Prepara essa ordem
             $statement->execute(); // executa a ordem
 
