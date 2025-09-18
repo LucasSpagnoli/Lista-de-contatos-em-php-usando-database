@@ -63,15 +63,15 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="nome" class="form-label">Nome</label>
-              <input type="text" class="form-control" id="nome" required>
+              <input type="text" class="form-control" id="nomeAdd" required>
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" required>
+              <input type="email" class="form-control" id="emailAdd" required>
             </div>
             <div class="mb-3">
               <label for="telefone" class="form-label">Telefone</label>
-              <input type="text" class="form-control" id="telefone" required>
+              <input type="text" class="form-control" id="telefoneAdd" required>
             </div>
           </div>
           <div class="modal-footer">
@@ -96,20 +96,20 @@
             <input type="hidden" id="edit-id">
             <div class="mb-3">
               <label for="edit-nome" class="form-label">Nome</label>
-              <input type="text" class="form-control" id="edit-nome" required>
+              <input type="text" class="form-control" id="nomeUpd">
             </div>
             <div class="mb-3">
               <label for="edit-email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="edit-email" required>
+              <input type="email" class="form-control" id="emailUpd">
             </div>
             <div class="mb-3">
               <label for="edit-telefone" class="form-label">Telefone</label>
-              <input type="text" class="form-control" id="edit-telefone" required>
+              <input type="text" class="form-control" id="telefoneUpd">
             </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-custom">Atualizar</button>
+            <button type="submit" class="updBtn btn btn-custom">Atualizar</button>
           </div>
         </form>
       </div>

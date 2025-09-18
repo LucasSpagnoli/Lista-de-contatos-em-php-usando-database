@@ -74,4 +74,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         http_response_code(500);
         echo json_encode($resposta);
     }
+} else if ($_SERVER['REQUEST_METHOD'] === 'PUT') { // caso o JS esteja querendo atualizar um contato
+    $json = file_get_contents('php://input');
+    $contatoUpd = json_decode($json);
+
+    if (empty($contatoUpd)) {
+        $resposta = ['status' => 'error', 'message' => 'Erro ao atualizar Contato'];
+        http_response_code(400);
+        echo json_encode($resposta);
+        exit();
+    }
+
+    $contatoAtualizado = $contatoDAO->update($contatoUpd);
+
+    if ($contatoAtualizado) {
+        $resposta = ['status' => 'success', 'message' => 'Contato atualizado com sucesso'];
+        echo json_encode($resposta);
+    } else {
+        $resposta = ['status' => 'error', 'message' => 'Erro ao atualizar contato no banco de dados.'];
+        http_response_code(500);
+        echo json_encode($resposta);
+    }
 }
