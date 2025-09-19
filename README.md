@@ -37,4 +37,5 @@ O sistema segue o padrão **MVC (Model-View-Controller)** para organizar melhor 
 - 📌 **Integração dinâmica** sem necessidade de recarregar a página (SPA-like).  
 - 📌 Estrutura organizada em **MVC**, facilitando manutenção e escalabilidade.  
 
-Link para o site: [EM CONSTRUÇÃO]
+Link para o site: https://lista-contatos.infinityfree.me/?i=1 
+(funções não funcionam pois o banco de dados foi criado no infinity free, e eles tem política de privacidade que não permite terceiros fazerem essa alteração, mas, caso queira testar com ele funcionando, é necessário criar um banco de dados local e alterar as informações no database.php)
