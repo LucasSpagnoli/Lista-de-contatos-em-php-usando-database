@@ -25,7 +25,7 @@ class ContatoDAO
             $statement = $this->connection->prepare($sql); // Prepara essa ordem
             $statement->execute(); // executa a ordem
 
-            return $statement->fetchAll(PDO::FETCH_ASSOC); // retorna os resultados. O fetchAll retorna todas as linhas encontradas, e o PDO::FETCH_ASSOC faz essas linhas virarem um array associativo, um formato fácil de se trabalhar.
+            return $statement->fetchAll(PDO::FETCH_ASSOC); // retorna os resultados. O fetchAll retorna todas as linhas encontradas, e o PDO::FETCH_ASSOC faz essas linhas virarem um array associativo, fácil pra trabalhar com JSON
 
         } catch (PDOException $e) {
             // Caso dê erro de conexão, interrompe a execução
@@ -41,6 +41,7 @@ class ContatoDAO
             $sql = "INSERT INTO contatos (id, nome, email, telefone) VALUES (NULL, ?, ?, ?)"; // Cria ordem em SQL pro banco de dados, tem ponto de interrogação por motivos de segurança
             $statement = $this->connection->prepare($sql);
             $success = $statement->execute([
+                // Informações pra irem no lugar dos pontos de interrogação
                 $contato->nome,
                 $contato->email,
                 $contato->telefone
@@ -68,34 +69,18 @@ class ContatoDAO
         }
     }
 
+    // Função que atualiza contato
     public function update($contato)
     {
-        $sql_parts = [];
-        $params = [];
-
-        if (isset($contato->nome)) {
-            $sql_parts[] = 'nome = ?';
-            $params[] = $contato->nome;
-        }
-        if (isset($contato->email)) {
-            $sql_parts[] = 'email = ?';
-            $params[] = $contato->email;
-        }
-        if (isset($contato->telefone)) {
-            $sql_parts[] = 'telefone = ?';
-            $params[] = $contato->telefone;
-        }
-
-        if (count($params) === 0) {
-            return false;
-        }
-
-        $sql = 'UPDATE contatos SET ' . implode(', ', $sql_parts) . " WHERE id = ?";
-        $params[] = $contato->id;
-
+        $sql = 'UPDATE contatos SET nome = ?, email = ?, telefone = ? WHERE id = ?';
         try {
             $statement = $this->connection->prepare($sql);
-            return $statement->execute($params);
+            return $statement->execute([
+                $contato->nome,
+                $contato->email,
+                $contato->telefone,
+                $contato->id
+            ]);
         } catch (PDOException $e) {
             error_log(("Erro ao atualizar contato: " . $e->getMessage()));
             return false;

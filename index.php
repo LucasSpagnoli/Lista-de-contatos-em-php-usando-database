@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gerenciador de Contatos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- bootstrap -->
-  <link rel="stylesheet" href="./estilos/styles.css">
-  <script defer src="js/script.js"></script> <!-- Javascript que conecta back com front end -->
+  <link rel="stylesheet" href="view/estilos/styles.css">
+  <script defer src="view/js/script.js"></script> <!-- Javascript que conecta back com front end -->
 </head>
 
 <body>

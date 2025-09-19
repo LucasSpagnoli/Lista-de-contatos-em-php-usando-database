@@ -1,17 +1,20 @@
 // Pega as variáveis que serão usadas
-let tabela = document.querySelector("#tabela-contatos")
+let lista = document.querySelector("#tabela-contatos")
 let addForm = document.querySelector('#formAdd')
 let editForm = document.querySelector('#formEdit')
-let url = '../controllers/contatoController.php' // URL do contatoController.php
+let url = 'controllers/contatoController.php' // URL do contatoController.php
 
+// Valida se os campos de nome e telefone estão num formato válido
 function validarCampos(nome, telefone) {
+    // Nome precisa ter só letras
     for (let char of nome) {
         if (!((char >= 'A' && char <= 'Z') || (char >= 'a' && char <= 'z') || char === ' ')) {
             window.alert('Digite um nome válido (somente letras)')
             return true
         }
     }
-    if (isNaN(telefone) || (telefone.length !== 10 && telefone.length !== 11)) {
+    // Telefone precisa ter só números e 10 ou 11 dígitos
+    if (isNaN(telefone) || telefone.length > 11 || telefone.length < 10) {
         window.alert('Digite um telefone válido (apenas números, com DDD, 10 ou 11 dígitos)')
         return true
     }
@@ -35,11 +38,11 @@ async function getData(request) {
 async function carregarContatos() {
     const contatos = await getData(url) // cria uma array de contatos com as informações do banco de dados
 
-    tabela.innerHTML = '' // esvazia a lista
+    lista.innerHTML = '' // esvazia a lista
 
     // for que percorre toda a array de contatos
     for (const contato of contatos) {
-        tabela.innerHTML +=
+        lista.innerHTML +=
             `
         <tr>
             <td>${contato.nome}</td>
@@ -53,7 +56,7 @@ async function carregarContatos() {
         `
     }
 }
-carregarContatos()
+carregarContatos() // Carrega os contatos ao entrar na página
 
 // Evento de submit no forms, vai salavar os dados em JSON e enviar ao controller pra ser usado no php e adicionar novo contato
 addForm.addEventListener('submit', async (event) => {
@@ -111,60 +114,70 @@ addForm.addEventListener('submit', async (event) => {
 })
 
 // Evento de deletar contato
-tabela.addEventListener('click', async (e) => {
+lista.addEventListener('click', async (e) => {
     const delBtn = e.target.closest('.delBtn')
     const preUpdBtn = e.target.closest('.preUpdBtn')
 
+    // Caso o botão clicado seja o de deletar
     if (delBtn) {
-        let contatoId = delBtn.dataset.id
-        let deletar = window.confirm('Tem certeza que deseja continuar?')
+        let contatoId = delBtn.dataset.id // pega o id do contato a ser deletado
+        let deletar = window.confirm('Tem certeza que deseja continuar?') // pede confirmação
+
+        // Se quiser, cria um postFetch
         if (deletar) {
-            deletarContato(contatoId)
-        } 
+            const postFetch = {
+                method: 'DELETE', // DELETE pra facilitar organização no php
+                headers: { 'Content-type': 'application/json' }, // pra identificar a página como sendo um json
+                body: JSON.stringify({ id: contatoId }) // informação que vai ser transformada em json
+            }
+
+            try {
+                const response = await fetch(url, postFetch) // fetch com url pro controller e as informações do postFetch
+                if (response.ok) {
+                    delBtn.closest('tr').remove() // vai remover a linha, ao invés de precisar carregar os contatos novamente
+                } else {
+                    console.log('Erro ao deletar contato')
+                }
+            } catch (error) {
+                console.log("Erro ao deletar contato: ", error)
+                alert('Não possível deletar, erro no servidor.')
+            }
+        }
+        // Caso tenha clicado em editar botão:
     } else if (preUpdBtn) {
-            const nomeInput = (document.querySelector('#nomeUpd'))
-            const emailInput = (document.querySelector('#emailUpd'))
-            const telefoneInput = (document.querySelector('#telefoneUpd'))
+        // Pega os elementos dos inputs
+        const nomeInput = (document.querySelector('#nomeUpd'))
+        const emailInput = (document.querySelector('#emailUpd'))
+        const telefoneInput = (document.querySelector('#telefoneUpd'))
 
-            nomeInput.value = preUpdBtn.dataset.nome
-            emailInput.value = preUpdBtn.dataset.email
-            telefoneInput.value = preUpdBtn.dataset.telefone
-        }
-    }
-)
+        // Pega os campos que estavam na lista de contatos e coloca no input
+        nomeInput.value = preUpdBtn.dataset.nome
+        emailInput.value = preUpdBtn.dataset.email
+        telefoneInput.value = preUpdBtn.dataset.telefone
 
-async function deletarContato(contatoId) {
-    const postFetch = {
-        method: 'DELETE',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ id: contatoId })
-    }
+        // ID do contato a ser editado
+        contatoId = preUpdBtn.dataset.id
 
-    try {
-        const response = await fetch(url, postFetch)
-        if (response.ok) {
-            delBtn.closest('tr').remove() // vai remover a linha, ao invés de precisar carregar os contatos novamente
-        } else {
-            console.log('Erro ao deletar contato')
-        }
-    } catch (error) {
-        console.log("Erro ao deletar contato: ", error)
-        alert('Não possível deletar, erro no servidor.')
+        // Função pra passar o id como parâmetro
+        criaForm(contatoId)
     }
 }
+)
 
+function criaForm(contatoId){
 editForm.addEventListener('submit', async (e) => {
     e.preventDefault()
     const nomeInput = (document.querySelector('#nomeUpd'))
     const emailInput = (document.querySelector('#emailUpd'))
     const telefoneInput = (document.querySelector('#telefoneUpd'))
-
-    const preUpdBtn = document.querySelector('.preUpdBtn')
-    let contatoId = preUpdBtn.dataset.id
-
+    
     let nome = nomeInput.value.trim()
     let email = emailInput.value.trim()
     let telefone = telefoneInput.value.trim()
+    
+    if (validarCampos(nome, telefone)){
+        return
+    }
 
     const contatoUpd = {
         id: contatoId,
@@ -182,6 +195,7 @@ editForm.addEventListener('submit', async (e) => {
     try {
         const response = await fetch(url, postFetch)
         if (response.ok) {
+            // Fecha o modal
             const modalEdit = bootstrap.Modal.getInstance(document.querySelector('#modalEdit'))
             modalEdit.hide()
             carregarContatos()
@@ -193,3 +207,4 @@ editForm.addEventListener('submit', async (e) => {
         alert('Não foi possível atualizar contato, erro no servidor.')
     }
 })
+}
